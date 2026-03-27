@@ -1,0 +1,23 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  nickname: String!
+  steamId: Float
+}
+
+type Query {
+  hello: String!
+  users: [User!]!
+}
+
+type Mutation {
+  createUser(createUserDto: CreateUserDto!): User!
+}
+
+input CreateUserDto {
+  nickname: String!
+  steamId: Float
+}
