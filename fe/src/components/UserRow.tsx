@@ -1,6 +1,7 @@
 import type { User } from "../types"
+import type { UserRole } from '../auth/AuthContext';
 
-export const UserRow = ({ user, handleDeleteUser, setEditUserId }: { user: User, handleDeleteUser: (id: number) => void, setEditUserId: (id: number) => void }) => {
+export const UserRow = ({ user, handleDeleteUser, setEditUserId, authUserRole }: { user: User, handleDeleteUser: (id: number) => void, setEditUserId: (id: number) => void, authUserRole?: UserRole }) => {
     return (
         <div className='flex justify-between  border-b border-gray-500 p-2'>
             <div className='flex gap-2 '>
@@ -11,8 +12,12 @@ export const UserRow = ({ user, handleDeleteUser, setEditUserId }: { user: User,
                 </div>
             </div>
             <div className='flex gap-2'>
-                <button className='cursor-pointer bg-red-500 text-white p-2 rounded-md' onClick={() => handleDeleteUser(user.id)}>Delete</button>
-                <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={() => setEditUserId(user.id)}>Edit</button>
+                {authUserRole === 'admin' && (
+                    <>
+                        <button className='cursor-pointer bg-red-500 text-white p-2 rounded-md' onClick={() => handleDeleteUser(user.id)}>Delete</button>
+                        <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={() => setEditUserId(user.id)}>Edit</button>
+                    </>
+                )}
             </div>
         </div>
     )

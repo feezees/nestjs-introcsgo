@@ -1,9 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { User } from "./user.entity";
+import { User, UserRole } from "./user.entity";
 import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -44,5 +45,46 @@ export class UsersService {
 
     async findAll(): Promise<User[]> {
         return this.userRepository.find();
+    }
+
+    async findByNicknameForAuth(nickname: string): Promise<User | null> {
+        return this.userRepository
+            .createQueryBuilder('user')
+            .addSelect('user.passwordHash')
+            .where('user.nickname = :nickname', { nickname })
+            .getOne();
+    }
+
+    async registerWithPassword(
+        nickname: string,
+        plainPassword: string,
+        steamId?: number,
+        role: UserRole = UserRole.USER,
+    ): Promise<User> {
+        const existing = await this.userRepository.findOne({
+            where: { nickname },
+        });
+        if (existing) {
+            throw new HttpException('Nickname already taken', HttpStatus.CONFLICT);
+        }
+        if (steamId !== undefined) {
+            const bySteam = await this.userRepository.findOne({
+                where: { steamId },
+            });
+            if (bySteam) {
+                throw new HttpException(
+                    'User with this steamid already exists',
+                    HttpStatus.CONFLICT,
+                );
+            }
+        }
+        const passwordHash = await bcrypt.hash(plainPassword, 10);
+        const user = this.userRepository.create({
+            nickname,
+            steamId,
+            passwordHash,
+            role,
+        });
+        return this.userRepository.save(user);
     }
 }

@@ -8,9 +8,11 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..',  'uploads'),
@@ -20,7 +22,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       type: 'sqlite',
       database: 'database.sqlite',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
+      migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

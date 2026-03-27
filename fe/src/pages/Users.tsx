@@ -1,9 +1,11 @@
-import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { api } from '../api/client';
 import { EditUserModal } from '../components/EditUserModal';
 import { UserRow } from '../components/UserRow';
 import '../index.css';
 import type { User } from '../types';
+import { useAuth } from '../auth/AuthContext';
+import type { UserRole } from '../auth/AuthContext';
 
 function Users() {
     const [users, setUsers] = useState<User[] | 'loading' | 'error'>('loading');
@@ -13,10 +15,10 @@ function Users() {
 
     const [editUserId, setEditUserId] = useState<number | null>(null);
 
+    const { user: authUser } = useAuth();
+
     const handleGetUsers = useCallback(async () => {
-        axios.get('http://localhost:3000/users', {
-            withCredentials: true,
-        }).then((response) => {
+        api.get('/users').then((response) => {
             setUsers(response.data);
         }).catch(() => {
             setUsers('error');
@@ -31,9 +33,7 @@ function Users() {
             }
         }
 
-        axios.post('http://localhost:3000/users', reqBody, {
-            withCredentials: true,
-        }).then((response) => {
+        api.post('/users', reqBody).then((response) => {
             console.log(response.data);
             handleGetUsers();
         }).catch((error) => {
@@ -42,9 +42,7 @@ function Users() {
     }, [nicknameRef, steamIdRef, handleGetUsers]);
 
     const handleDeleteUser = useCallback(async (id: number) => {
-        axios.delete(`http://localhost:3000/users/${id}`, {
-            withCredentials: true,
-        }).then((response) => {
+        api.delete(`/users/${id}`).then((response) => {
             console.log(response.data);
             handleGetUsers();
         }).catch((error) => {
@@ -53,8 +51,8 @@ function Users() {
     }, [handleGetUsers]);
 
     const handleUpdateUser = useCallback(async (reqBody: { nickname: string; steamId?: number }) => {
-        axios
-            .put(`http://localhost:3000/users/${editUserId}`, reqBody, { withCredentials: true })
+        api
+            .put(`/users/${editUserId}`, reqBody)
             .then((response) => {
                 setEditUserId(null);
                 console.log(response.data);
@@ -71,11 +69,13 @@ function Users() {
 
     return (
         <>
+                        {authUser?.role === 'admin' && (
             <div className='flex gap-2 p-2 m-2'>
                 <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
                 <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
                 <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={handleAddUser}>Add</button>
             </div>
+            )}
 
             {users === 'loading' && <div>Loading...</div>}
             {users === 'error' && <div>Get users Error</div>}
@@ -84,7 +84,7 @@ function Users() {
 
             <div className='flex flex-col gap-2 p-2 m-2'>
                 {users instanceof Array && users.map((user) => (
-                    <UserRow key={user.id} user={user} handleDeleteUser={handleDeleteUser} setEditUserId={setEditUserId} />
+                    <UserRow key={user.id} user={user} handleDeleteUser={handleDeleteUser} setEditUserId={setEditUserId} authUserRole={authUser?.role} />
                 ))}
             </div>
         </>

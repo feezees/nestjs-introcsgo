@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { Background } from "./Background"
+import { useAuth } from "../auth/AuthContext"
 
 const navItems = [
     {
@@ -9,12 +10,32 @@ const navItems = [
 ]
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
+    const { user, logout, loading } = useAuth()
+
     return (
         <div className="flex flex-col items-center justify-center  text-white w-full">
-            <nav className="w-screen flex p-4 gap-2 border-b border-gray-500">
-                {navItems.map((item) => (
-                    <Link key={item.path} className="text-gray-300 hover:text-white" to={item.path}>{item.label}</Link>
-                ))}
+            <nav className="w-screen flex flex-wrap items-center justify-between p-4 gap-2 border-b border-gray-500">
+                <div className="flex gap-4">
+                    {navItems.map((item) => (
+                        <Link key={item.path} className="text-gray-300 hover:text-white" to={item.path}>{item.label}</Link>
+                    ))}
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                    {!loading && user && (
+                        <>
+                            <span className="text-gray-400">{user.nickname}</span>
+                            <button type="button" className="text-gray-300 hover:text-white cursor-pointer" onClick={() => logout()}>
+                                выход
+                            </button>
+                        </>
+                    )}
+                    {!loading && !user && (
+                        <>
+                            <Link className="text-gray-300 hover:text-white" to="/login">вход</Link>
+                            <Link className="text-gray-300 hover:text-white" to="/register">регистрация</Link>
+                        </>
+                    )}
+                </div>
             </nav>
             <Background />
             <div className='min-h-[100%] w-full'>
