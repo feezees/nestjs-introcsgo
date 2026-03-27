@@ -14,12 +14,16 @@ export class UsersService {
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
         const user = await this.userRepository.findOne({ where: { id } });
+
         if (!user) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
         
-        await this.userRepository.update(id, updateUserDto);
-        return this.userRepository.findOne({ where: { id } });
+        if (!updateUserDto.nickname) {
+            throw new HttpException('Nickname is required', HttpStatus.BAD_REQUEST);
+        }
+
+        return this.userRepository.save({ id, ...updateUserDto });
     }
 
     async delete(id: number): Promise<void> {

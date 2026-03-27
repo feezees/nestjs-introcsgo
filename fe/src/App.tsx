@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import './index.css';
 import type { User } from './types';
 import { UserRow } from './components/UserRow';
+import { EditUserModal } from './components/EditUserModal';
 
 function App() {
   const [users, setUsers] = useState<User[] | 'loading' | 'error'>('loading');
@@ -10,12 +11,14 @@ function App() {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const steamIdRef = useRef<HTMLInputElement>(null);
 
+  const [editUserId, setEditUserId] = useState<number | null>(null);
+
   const handleGetUsers = useCallback(async () => {
     axios.get('http://localhost:3000/users', {
       withCredentials: true,
     }).then((response) => {
       setUsers(response.data);
-    }).catch((error) => {
+    }).catch(() => {
       setUsers('error');
     })
   }, []);
@@ -49,6 +52,19 @@ function App() {
     })
   }, [handleGetUsers]);
 
+  const handleUpdateUser = useCallback(async (reqBody: { nickname: string; steamId?: number }) => {
+   
+    axios.put(`http://localhost:3000/users/${editUserId}`, reqBody, {
+      withCredentials: true,
+    }).then((response) => {
+      setEditUserId(null);
+      console.log(response.data);
+      handleGetUsers();
+    }).catch((error) => {
+      console.log(error);
+    })
+  }, [editUserId, handleGetUsers]);
+
   useEffect(() => {
     handleGetUsers();
   }, [handleGetUsers]);
@@ -66,9 +82,11 @@ function App() {
         {users === 'loading' && <div>Loading...</div>}
         {users === 'error' && <div>Get users Error</div>}
 
+        <EditUserModal editUserId={editUserId} handleUpdateUser={handleUpdateUser} setEditUserId={setEditUserId} />
+
         <div className='flex flex-col gap-2 p-2 m-2'>
           {users instanceof Array && users.map((user) => (
-            <UserRow key={user.id} user={user} handleDeleteUser={handleDeleteUser} />
+            <UserRow key={user.id} user={user} handleDeleteUser={handleDeleteUser} setEditUserId={setEditUserId} />
           ))}
         </div>
       </div>
