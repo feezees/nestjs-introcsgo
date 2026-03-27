@@ -5,4 +5,4 @@ import './index.css';
 
 const root = document.getElementById('root');
 // createRoot(root!).render(<MemoryRouter><App /></MemoryRouter>);
-createRoot(root!).render(<App />);
+createRoot(root!).render(<BrowserRouter><App /></BrowserRouter>);

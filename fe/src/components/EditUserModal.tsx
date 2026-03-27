@@ -22,13 +22,14 @@ export const EditUserModal = ({ editUserId, handleUpdateUser, setEditUserId }: E
     }, [nicknameRef, steamIdRef, handleUpdateUser]);
     return (
         <>
-            {editUserId && <div className='fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center'>
-                <div className='flex flex-col gap-2 p-2 m-2 min-w-md bg-white text-black rounded-md'>
-                    <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
-                    <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
-                    <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={submitHandler}>Update</button>
-                    <button className='cursor-pointer bg-red-500 text-white p-2 rounded-md' onClick={() => setEditUserId(null)}>Cancel</button>
-                </div>
+            {editUserId && <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center'>
+                <div className="bg-black opacity-70 absolute inset-0"  onClick={() => setEditUserId(null)}> </div>
+                    <div className='z-10 flex flex-col gap-2 p-2 m-2 min-w-md bg-white text-black rounded-md'>
+                        <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
+                        <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
+                        <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={submitHandler}>Update</button>
+                        <button className='cursor-pointer bg-red-500 text-white p-2 rounded-md' onClick={() => setEditUserId(null)}>Cancel</button>
+                    </div>
             </div>}
         </>
     )
