@@ -6,6 +6,7 @@ import Users from './pages/Users';
 import { NotFound } from './pages/404';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Inventory from './pages/Inventory';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/inventory/:id" element={<Inventory />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

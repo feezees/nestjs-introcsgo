@@ -1,5 +1,6 @@
 import type { User } from "../types"
 import type { UserRole } from '../auth/AuthContext';
+import { Link } from "react-router-dom";
 
 export const UserRow = ({ user, handleDeleteUser, setEditUserId, authUserRole }: { user: User, handleDeleteUser: (id: number) => void, setEditUserId: (id: number) => void, authUserRole?: UserRole }) => {
     return (
@@ -9,6 +10,9 @@ export const UserRow = ({ user, handleDeleteUser, setEditUserId, authUserRole }:
                 <div className="w-[300px]">
                     {/* link to steam profile */}
                     <a href={`https://steamcommunity.com/profiles/${user.steamId}`} className="font-medium text-fg-brand hover:underline">{user.steamId}</a>
+                </div>
+                <div className="w-[300px]">
+                    <Link to={`/inventory/${user.id}`}>Inventory</Link>
                 </div>
             </div>
             <div className='flex gap-2'>

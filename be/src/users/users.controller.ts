@@ -25,14 +25,27 @@ export class UsersController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(UserRole.ADMIN)
     @Put(':id')
-    update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-        return this.usersService.update(id, updateUserDto);
+    async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto): Promise<any> {
+        const userEntity = await this.usersService.update(id, updateUserDto);
+        return {
+            id: userEntity.id,
+            nickname: userEntity.nickname,
+            steamId: userEntity.steamId,
+            role: userEntity.role,
+            inventory: userEntity.inventory?.id,
+        };
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto): Promise<User> {
-        console.log(createUserDto);
-        return this.usersService.create(createUserDto);
+    async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+        const userEntity = await this.usersService.create(createUserDto);
+        return {
+            id: userEntity.id,
+            nickname: userEntity.nickname,
+            steamId: userEntity.steamId,
+            role: userEntity.role,
+            inventory: userEntity.inventory?.id,
+        };
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
@@ -43,7 +56,14 @@ export class UsersController {
     }
 
     @Get()
-    findAll(): Promise<User[]> {
-        return this.usersService.findAll();
+    async findAll(): Promise<any[]> {
+        const userEntities = await this.usersService.findAll();
+        return userEntities.map(userEntity => ({
+            id: userEntity.id,
+            nickname: userEntity.nickname,
+            steamId: userEntity.steamId,
+            role: userEntity.role,
+            inventory: userEntity.inventory?.id,
+        }));
     }
 }

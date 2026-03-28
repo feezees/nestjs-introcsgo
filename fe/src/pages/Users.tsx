@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '../api/client';
+import { useAuth } from '../auth/AuthContext';
 import { EditUserModal } from '../components/EditUserModal';
 import { UserRow } from '../components/UserRow';
 import '../index.css';
 import type { User } from '../types';
-import { useAuth } from '../auth/AuthContext';
-import type { UserRole } from '../auth/AuthContext';
 
 function Users() {
     const [users, setUsers] = useState<User[] | 'loading' | 'error'>('loading');
@@ -69,18 +68,25 @@ function Users() {
 
     return (
         <>
-                        {authUser?.role === 'admin' && (
-            <div className='flex gap-2 p-2 m-2'>
-                <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
-                <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
-                <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={handleAddUser}>Add</button>
-            </div>
+            {authUser?.role === 'admin' && (
+                <div className='flex gap-2 p-2 m-2'>
+                    <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
+                    <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
+                    <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={handleAddUser}>Add</button>
+                </div>
             )}
 
             {users === 'loading' && <div>Loading...</div>}
             {users === 'error' && <div>Get users Error</div>}
 
             <EditUserModal editUserId={editUserId} handleUpdateUser={handleUpdateUser} setEditUserId={setEditUserId} />
+
+            <div className='flex justify-between  border-b border-gray-500 p-2'>
+                <div className='flex gap-2 pl-4 '>
+                    <div className="w-[300px]">nickname</div>
+                    <div className="w-[300px]">steamId</div>
+                </div>
+            </div>
 
             <div className='flex flex-col gap-2 p-2 m-2'>
                 {users instanceof Array && users.map((user) => (

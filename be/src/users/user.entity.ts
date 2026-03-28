@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { IsNumber } from "class-validator";
+import { Inventory } from "src/inventory/inventory.entity";
 
 export enum UserRole {
     ADMIN = 'admin',
@@ -26,4 +27,11 @@ export class User {
         default: UserRole.USER,
     })
     role: UserRole;
+
+    @Column({ unique: true })
+    inventoryId: number;
+
+    @OneToOne(() => Inventory, { eager: true })
+    @JoinColumn({ name: 'inventoryId', referencedColumnName: 'id' })
+    inventory: Inventory;
 }

@@ -6,6 +6,8 @@ type User {
   id: Int!
   nickname: String!
   steamId: Float
+  role: String!
+  inventory: Int!
 }
 
 type Query {

@@ -9,11 +9,15 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthModule } from './auth/auth.module';
+import { User } from './users/user.entity';
+import { Inventory } from './inventory/inventory.entity';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    InventoryModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..',  'uploads'),
       serveRoot: '/uploads',
@@ -24,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
       autoLoadEntities: true,
       synchronize: false,
       migrations: [join(__dirname, 'migrations/*{.ts,.js}')],
+      entities: [User, Inventory],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
