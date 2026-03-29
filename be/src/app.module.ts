@@ -12,12 +12,14 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/user.entity';
 import { Inventory } from './inventory/inventory.entity';
 import { InventoryModule } from './inventory/inventory.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
     InventoryModule,
+    ProfileModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..',  'uploads'),
       serveRoot: '/uploads',

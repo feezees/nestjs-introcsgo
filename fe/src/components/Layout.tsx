@@ -23,7 +23,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 <div className="flex items-center gap-3 text-sm">
                     {!loading && user && (
                         <>
-                            <span className="text-gray-400">{user.nickname}</span>
+                            <Link className="text-gray-300 hover:text-white" to={`/profile/${user.id}`}>{user.nickname}</Link>
                             <button type="button" className="text-gray-300 hover:text-white cursor-pointer" onClick={() => logout()}>
                                 выход
                             </button>

@@ -5,7 +5,8 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import * as bcrypt from "bcrypt";
-
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JWT_SECRET } from "src/auth/auth.constants";
 @Injectable()
 export class UsersService {
     constructor(
@@ -47,6 +48,10 @@ export class UsersService {
         return this.userRepository.find();
     }
 
+    async findById(id: number): Promise<User | null> {
+        return this.userRepository.findOne({ where: { id } });
+    }
+
     async findByNicknameForAuth(nickname: string): Promise<User | null> {
         return this.userRepository
             .createQueryBuilder('user')
@@ -86,5 +91,14 @@ export class UsersService {
             role,
         });
         return this.userRepository.save(user);
+    }
+
+    async isOwner(token:string, userId: number): Promise<boolean> {
+        const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+
+        console.log(decoded.sub);
+        console.log(userId);
+        
+        return +decoded.sub === +userId.toString();
     }
 }
