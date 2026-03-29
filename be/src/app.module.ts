@@ -13,6 +13,7 @@ import { User } from './users/user.entity';
 import { Inventory } from './inventory/inventory.entity';
 import { InventoryModule } from './inventory/inventory.module';
 import { ProfileModule } from './profile/profile.module';
+import { ItemModule } from './item/item.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProfileModule } from './profile/profile.module';
     UsersModule,
     InventoryModule,
     ProfileModule,
+    ItemModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..',  'uploads'),
       serveRoot: '/uploads',

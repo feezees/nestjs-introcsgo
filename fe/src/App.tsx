@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Inventory from './pages/Inventory';
 import Profile from './pages/Profile';
+import Items from './pages/Items';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         />
         <Route path="/inventory/:id" element={<Inventory />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/items" element={<Items />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Layout>

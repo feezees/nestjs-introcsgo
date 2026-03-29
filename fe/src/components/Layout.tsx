@@ -6,6 +6,10 @@ const navItems = [
     {
         label: "users",
         path: "/",
+    },
+    {
+        label: "items",
+        path: "/items",
     }
 ]
 
@@ -38,7 +42,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                 </div>
             </nav>
             <Background />
-            <div className='min-h-[100%] w-full'>
+            <div className='min-h-[100%] w-full p-4'>
                 {children}
             </div>
         </div>

@@ -69,7 +69,7 @@ function Users() {
     return (
         <>
             {authUser?.role === 'admin' && (
-                <div className='flex gap-2 p-2 m-2'>
+                <div className='flex gap-2 pb-2 mb-2'>
                     <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter user nickname' ref={nicknameRef} />
                     <input type="text" className='border-2 border-gray-500 p-2 rounded-md' placeholder='Enter your steamId' ref={steamIdRef} />
                     <button className='cursor-pointer bg-blue-500 text-white p-2 rounded-md' onClick={handleAddUser}>Add</button>
@@ -81,8 +81,8 @@ function Users() {
 
             <EditUserModal editUserId={editUserId} handleUpdateUser={handleUpdateUser} setEditUserId={setEditUserId} />
 
-            <div className='flex justify-between  border-b border-gray-500 p-2'>
-                <div className='flex gap-2 pl-4 '>
+            <div className='flex justify-between  border-b border-gray-500 p-2 ml-4'>
+                <div className='flex gap-2'>
                     <div className="w-[300px]">nickname</div>
                     <div className="w-[300px]">steamId</div>
                 </div>

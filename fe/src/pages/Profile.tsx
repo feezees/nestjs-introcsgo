@@ -40,7 +40,7 @@ export default function Profile() {
     }, [id]);
 
     return (
-        <div className="flex flex-col p-4">
+        <div className="flex flex-col">
             {error && (
                 <div>
                     <p>{error}</p>
