@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Controller, Get } from "@nestjs/common";
 import { Post } from "@nestjs/common";
-import { ItemCoreType, ItemService } from "./item.service";
+import { ItemService } from "./item.service";
+import { ItemCoreType } from "./item.constants";
 
 @Controller('item')
 export class ItemController {
