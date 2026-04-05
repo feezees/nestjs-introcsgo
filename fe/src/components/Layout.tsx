@@ -10,6 +10,10 @@ const navItems = [
     {
         label: "items",
         path: "/items",
+    },
+    {
+        label: "chat",
+        path: "/chat",
     }
 ]
 

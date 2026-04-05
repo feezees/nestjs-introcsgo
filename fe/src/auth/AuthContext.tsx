@@ -13,7 +13,7 @@ const TOKEN_KEY = 'access_token';
 const USER_KEY = 'auth_user';
 
 export type UserRole = 'admin' | 'user';
-export type AuthUser = { nickname: string; role: UserRole };
+export type AuthUser = { nickname: string; role: UserRole; id: number };
 
 type AuthContextValue = {
     user: AuthUser | null;

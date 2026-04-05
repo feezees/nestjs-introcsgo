@@ -9,8 +9,8 @@ import Register from './pages/Register';
 import Inventory from './pages/Inventory';
 import Profile from './pages/Profile';
 import Items from './pages/Items';
-import Chat from './pages/Chat.tsx';
-  
+import Chat from './pages/Chat';
+
 function App() {
   return (
     <Layout>
@@ -25,11 +25,11 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/inventory/:id" element={<Inventory />} />
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/items" element={<Items />} />
+        <Route path="/inventory/:id" element={<ProtectedRoute><Inventory /></ProtectedRoute>} />
+        <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/items" element={<ProtectedRoute><Items /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
       </Routes>
     </Layout>
   );
