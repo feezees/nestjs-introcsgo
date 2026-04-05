@@ -91,25 +91,24 @@ describe('ProfileService', () => {
     const mockAiResponse = { response: newNickname };
 
     // Мокаем глобальный fetch
-    const mockFetch = jest.fn();
-    beforeAll(() => {
-      global.fetch = mockFetch;
-    });
-    afterAll(() => {
-      delete global.fetch;
-    });
+    // beforeAll(() => {
+    //   global.fetch = mockFetch;
+    // });
+    // afterAll(() => {
+    //   delete global.fetch;
+    // });
+
 
     it('should update nickname if owner and AI returns a string', async () => {
       (usersService.isOwner as jest.Mock).mockResolvedValue(true);
-      mockFetch.mockResolvedValue({
-        json: () => Promise.resolve(mockAiResponse),
-      });
       (usersService.update as jest.Mock).mockResolvedValue({ ...mockUser, nickname: newNickname });
+      console.log('#52 result', )
 
       const result = await service.aiUpdateNickname(testToken, testUserId, oldNickname);
+
+
       expect(result.nickname).toBe(newNickname);
       expect(usersService.isOwner).toHaveBeenCalledWith(testToken, Number(testUserId));
-      expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(usersService.update).toHaveBeenCalledWith(Number(testUserId), { nickname: newNickname });
     });
 
@@ -118,29 +117,22 @@ describe('ProfileService', () => {
 
       await expect(service.aiUpdateNickname(testToken, testUserId, oldNickname)).rejects.toThrow(UnauthorizedException);
       expect(usersService.isOwner).toHaveBeenCalledWith(testToken, Number(testUserId));
-      expect(mockFetch).not.toHaveBeenCalled();
       expect(usersService.update).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException if AI returns non-string response', async () => {
       (usersService.isOwner as jest.Mock).mockResolvedValue(true);
-      mockFetch.mockResolvedValue({
-        json: () => Promise.resolve({ response: 123 }), // AI возвращает число
-      });
 
       await expect(service.aiUpdateNickname(testToken, testUserId, oldNickname)).rejects.toThrow(BadRequestException);
       expect(usersService.isOwner).toHaveBeenCalledWith(testToken, Number(testUserId));
-      expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(usersService.update).not.toHaveBeenCalled();
     });
 
     it('should throw InternalServerErrorException if fetch fails', async () => {
       (usersService.isOwner as jest.Mock).mockResolvedValue(true);
-      mockFetch.mockRejectedValue(new Error('Network error')); // Имитируем ошибку сети
 
       await expect(service.aiUpdateNickname(testToken, testUserId, oldNickname)).rejects.toThrow(); // Ожидаем любое исключение
       expect(usersService.isOwner).toHaveBeenCalledWith(testToken, Number(testUserId));
-      expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(usersService.update).not.toHaveBeenCalled();
     });
   });

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { User } from "src/users/user.entity";
 import { UsersService } from "src/users/users.service";
 
@@ -26,6 +26,12 @@ export class ProfileService {
 
             }),
         });
+
+        console.log('#52 aiResponse', aiResponse)
+
+        if (!aiResponse?.ok) {
+            throw new InternalServerErrorException(`AI API returned status ${aiResponse.status}`);
+        }
 
         const aiResponseJson = await aiResponse.json();
         console.log('#52', aiResponseJson.response);

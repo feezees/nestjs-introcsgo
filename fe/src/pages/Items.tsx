@@ -10,6 +10,7 @@ export default function Items() {
     const [activeCore, setActiveCore] = useState<string | null>(null);
     const [image, setImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>('');
 
     useEffect(() => {
         api.get('/item/ai-generate-prompt').then(response => {
@@ -41,9 +42,24 @@ export default function Items() {
         });
     }
 
+    const createItem = () => {
+        console.log(title, image);
+        return;
+        api.post('/item/create', {
+            title: title,
+            image: image,
+        }).then(response => {
+            console.log(response.data);
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+
+    const submitDisabled = !title || !image;
+
     return (
-        <div >
-            <h1>Items</h1>
+        <div className="flex flex-col justify-center gap-2" >
+            <input className="w-1/2 p-2 border-2 border-gray-500 rounded-md bg-black/40 text-white" placeholder="Title" type="text" value={title} onChange={e => setTitle(e.target.value)} />
 
             <div className="flex flex-wrap gap-2">
                 {core.map(core => (
@@ -61,7 +77,7 @@ export default function Items() {
                 ))}
             </div>
 
-            <button onClick={() => {
+            <button className="flex w-128 my-2 cursor-pointer bg-blue-500 text-white p-2 rounded-md" onClick={() => {
                 generateImage();
             }}>Generate Image</button>
 
@@ -69,6 +85,10 @@ export default function Items() {
                 {!loading && <img src={image ? image : 'https://placehold.co/400'} className="object-cover h-full w-full" alt="image" />}
                 {loading && <p>Loading...</p>}
             </div>
+
+            <button className="mt-2 w-128 cursor-pointer bg-blue-500 text-white p-2 rounded-md" onClick={() => {
+                createItem();
+            }} disabled={submitDisabled}>Create Item</button> 
         </div>
     )
 }
